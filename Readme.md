@@ -6,15 +6,30 @@ export DB_PASSWORD=999
 mvn spring-boot:run # -Dspring-boot.run.profiles=prod
 ```
 
-Open in browser:
+With *curl*
 ```
-http://localhost:8080/api/databases
-http://localhost:8080/api/databases/bookstore/tables
-```
+curl -s http://localhost:8080/books/addBook \
+  --header 'Content-Type: application/json' \
+  --data '{
+        "title": "Spring Boot Essentials",
+        "author": "Jane Doe",
+        "price": 19.99
+    }
+    ' | jq
 
-Or with *curl*
-```
-curl -s http://localhost:8080/api/databases/bookstore/tables | jq
+BOOK2='{"title": "Spring Boot 2ed", "author": "Jane & John Doe", "price": 28.99}'
+curl -s http://localhost:8080/books/addBook \
+  --header 'Content-Type: application/json' \
+  --data "$BOOK2" | jq
+
+curl -s 'http://localhost:8080/books/getBooks' | jq
+curl -s 'http://localhost:8080/books/getBook/1' | jq
+
+curl -s --request PUT 'http://localhost:8080/books/updateBook/2' \
+  --header 'Content-Type: application/json' \
+  --data '{"title":"Spring Boot 3","author": "John", "price":"10.99"}' | jq
+
+curl --request DELETE 'http://localhost:8080/books/deleteBook/1'
 ```
 
 Health-check
