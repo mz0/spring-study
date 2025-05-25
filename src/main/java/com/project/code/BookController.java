@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.*;
 
 @RestController
 @RequestMapping("/book")
@@ -21,14 +22,19 @@ public class BookController {
 
     // Create a new book
     @PostMapping
-    public String createBook(@Valid @RequestBody Book book, BindingResult result) {
+    public ResponseEntity<ApiResponse<?>> createBook(@Valid @RequestBody Book book, BindingResult result) {
         bookValidator.validate(book, result);
 
         if (result.hasErrors()) {
-            return "Validation failed: " + result.getAllErrors();
+            List<String> errors = result.getFieldErrors().stream()
+                    .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            ApiResponse<List<String>> invalid = new ApiResponse<>("error", "Validation failed", errors);
+            return new ResponseEntity<>(invalid, HttpStatus.BAD_REQUEST);
         }
-        bookRepository.save(book);
-        return "Book added\n";
+        var sb = bookRepository.save(book);
+        ApiResponse<Book> response = new ApiResponse<>("success", "Book created successfully", sb);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
