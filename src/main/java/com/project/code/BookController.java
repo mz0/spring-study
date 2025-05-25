@@ -43,10 +43,12 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Book>> getBookById(@PathVariable Long id) {
         Optional<Book> book = bookRepository.findById(id);
-        return book.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                   .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return book.map(value -> ResponseEntity.status(HttpStatus.CREATED)
+                        .body(new ApiResponse<>("success", "Book found", value)))
+                   .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiResponse<>("error", "Book not found", null)));
     }
 
     @PutMapping("/{id}")

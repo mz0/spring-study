@@ -51,6 +51,27 @@ The last case produces the following error:
 }
 ```
 
+Quering non-existent `curl -s 'http://localhost:8080/book/1' | jq` and existing book details
+```json
+{
+  "status": "error",
+  "message": "Book not found",
+  "data": null
+}
+---
+{
+  "status": "success",
+  "message": "Book found",
+  "data": {
+    "id": 3,
+    "title": "Spring 2025: Boots and Shoes",
+    "author": "John Doe",
+    "price": 124.99,
+    "genre": "Fashion"
+  }
+}
+```
+
 Health-check
 ```bash
 curl -s http://localhost:8080/actuator/health | jq
