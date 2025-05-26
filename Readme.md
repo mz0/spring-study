@@ -1,4 +1,8 @@
-## WARNING: see [BROKEN](BROKEN.md)
+## Pre-create a Database
+```shell
+mysql --user=root -e 'create database userData'
+mysql --user=root -e "GRANT ALL ON userData.* TO shsha@'%'"
+```
 
 Run using 'dev' profile (set in `application.properties`):
 ```bash
@@ -17,86 +21,51 @@ fuser -k 8080/tcp
 
 With *curl*
 ```bash
-BOOK='{ "title": "Spring Boot Essentials", "author": "Jane Doe", "price": 21.95 }'
-
-curl -s http://localhost:8080/saveBook \
+JDATA='{"username": "john_doe", "email": "john.doe@example.com", "profileBio": "Software Developer"}'
+curl -s http://localhost:8080/createUser \
   --header 'Content-Type: application/json' \
-  --data "$BOOK"
-
-BOOK='{"title": "Spring Boot 2Ed", "author": "Jane & John Doe", "price": 28.99}'
-curl -s http://localhost:8080/saveBook \
-  --header 'Content-Type: application/json' \
-  --data "$BOOK"
+  --data "$JDATA"
 
 curl -s 'http://localhost:8080/getBook/1' | jq
-curl -s 'http://localhost:8080/getBooks' | jq
+
+JDATA='{"username": "jane_doe", "email": "jane@example.org", "profileBio": "UX Expert"}'
+curl -s http://localhost:8080/createUser \
+  --header 'Content-Type: application/json' \
+  --data "$JDATA"
+
+User and profile created OK
+
+JDATA='{"content": "This is a new post!", "userId": 1}'
+curl -s http://localhost:8080/createPost \
+  --header 'Content-Type: application/json' \
+  --data "$JDATA"
+
+Post created OK
+
+curl -s 'http://localhost:8080/getPosts/1' | jq
 ```
-The last two calls results:
-```json
-{
-  "id": 1,
-  "title": "Spring Boot Essentials",
-  "author": "Jane Doe",
-  "price": 21.95,
-  "genre": null
-}
-```
-and
 ```json
 [
   {
     "id": 1,
-    "title": "Spring Boot Essentials",
-    "author": "Jane Doe",
-    "price": 21.95,
-    "genre": null
-  },
-  {
-    "id": 2,
-    "title": "Spring Boot 2Ed",
-    "author": "Jane & John Doe",
-    "price": 28.99,
-    "genre": null
-  }
-]
-```
-
-Health-check
-```bash
-curl -s http://localhost:8080/actuator/health | jq
-```
-produces
-```json
-{
-  "status": "UP",
-  "components": {
-    "db": {
-      "status": "UP",
-      "details": {
-        "database": "MySQL",
-        "validationQuery": "isValid()"
-      }
-    },
-    "diskSpace": {
-      "status": "UP",
-      "details": {
-        "total": 999888777000,
-        "free": 789888777000,
-        "threshold": 10485760,
-        "path": "~/com.project/code/.",
-        "exists": true
-      }
-    },
-    "ping": {
-      "status": "UP"
-    },
-    "ssl": {
-      "status": "UP",
-      "details": {
-        "validChains": [],
-        "invalidChains": []
-      }
+    "content": "This is a new post!",
+    "user": {
+      "id": 1,
+      "username": "john_doe",
+      "email": "john.doe@example.com",
+      "profile": {
+        "id": 1,
+        "bio": "Software Developer",
+        "user": 1
+      },
+      "posts": [
+        {
+          "id": 1,
+          "content": "This is a new post!",
+          "user": 1
+        }
+      ]
     }
   }
-}
+]
 ```
