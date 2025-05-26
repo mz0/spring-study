@@ -1,22 +1,29 @@
 package com.project.code;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.*;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-@Entity
+@Entity @Table(name = "e_book")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull @Size(min = 2, max = 100)
+    @NotNull @Size(min = 2, max = 100) @Column(nullable = false, length = 100)
     private String title;
 
+    @Column(name = "authors", length = 254)
     private String author;
+
+    @Column(name = "price", nullable = false)
     private double price;
+
     private String genre;
 
     public Long getId() {

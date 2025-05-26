@@ -1,3 +1,5 @@
+## WARNING: see [BROKEN](BROKEN.md)
+
 Run using 'dev' profile (set in `application.properties`):
 ```bash
 export DB_USERNAME=shsha
@@ -17,59 +19,46 @@ With *curl*
 ```bash
 BOOK='{ "title": "Spring Boot Essentials", "author": "Jane Doe", "price": 21.95 }'
 
-curl -s http://localhost:8080/book \
+curl -s http://localhost:8080/saveBook \
   --header 'Content-Type: application/json' \
-  --data "$BOOK" | jq
+  --data "$BOOK"
 
 BOOK='{"title": "Spring Boot 2Ed", "author": "Jane & John Doe", "price": 28.99}'
-curl -s http://localhost:8080/book \
+curl -s http://localhost:8080/saveBook \
   --header 'Content-Type: application/json' \
-  --data "$BOOK" | jq
+  --data "$BOOK"
 
-curl -s 'http://localhost:8080/book' | jq
-curl -s 'http://localhost:8080/book/1' | jq
-
-curl -s --request PUT 'http://localhost:8080/book/2' \
-  --header 'Content-Type: application/json' \
-  --data '{"title":"Spring Boot 3", "author":"John \"Boots\" Doe", "price":10.99, "genre":"Java"}' | jq
-
-curl --request DELETE 'http://localhost:8080/book/1'
-
-BOOK='{"title": "Spring Boot 2Ed", "author": "Jane & John Doe", "price": 0.10}'
-curl -s http://localhost:8080/book \
-  --header 'Content-Type: application/json' \
-  --data "$BOOK" |jq
+curl -s 'http://localhost:8080/getBook/1' | jq
+curl -s 'http://localhost:8080/getBooks' | jq
 ```
-The last case produces the following error:
+The last two calls results:
 ```json
 {
-  "status": "error",
-  "message": "Validation failed",
-  "data": [
-    "price: Price must be greater than $0.19"
-  ]
+  "id": 1,
+  "title": "Spring Boot Essentials",
+  "author": "Jane Doe",
+  "price": 21.95,
+  "genre": null
 }
 ```
-
-Quering non-existent `curl -s 'http://localhost:8080/book/1' | jq` and existing book details
+and
 ```json
-{
-  "status": "error",
-  "message": "Book not found",
-  "data": null
-}
----
-{
-  "status": "success",
-  "message": "Book found",
-  "data": {
-    "id": 3,
-    "title": "Spring 2025: Boots and Shoes",
-    "author": "John Doe",
-    "price": 124.99,
-    "genre": "Fashion"
+[
+  {
+    "id": 1,
+    "title": "Spring Boot Essentials",
+    "author": "Jane Doe",
+    "price": 21.95,
+    "genre": null
+  },
+  {
+    "id": 2,
+    "title": "Spring Boot 2Ed",
+    "author": "Jane & John Doe",
+    "price": 28.99,
+    "genre": null
   }
-}
+]
 ```
 
 Health-check
