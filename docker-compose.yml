@@ -31,9 +31,25 @@ services:
       MYSQL_USER: 'shsha'
       MYSQL_PASSWORD: '999'
 
+  mongodb:
+    image: mongo:8.0.8-noble
+    container_name: mongo
+    volumes:
+      - mongo8data:/data/db
+    networks:
+      - sTest
+    hostname: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 'simple-1'
+      MONGO_INITDB_DATABASE: test
+
 networks:
   sTest:
     name: d-net1
     driver: bridge
 volumes:
   mysql8data:
+  mongo8data:
