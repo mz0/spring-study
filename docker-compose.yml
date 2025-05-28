@@ -23,7 +23,7 @@ services:
       - sTest
     hostname: mysql8
     ports:
-      - "3306:3306"
+      - 3306:3306
     environment:
       MYSQL_HOST_NAME: mysql8
       MYSQL_DATABASE: 'ushat'
@@ -46,6 +46,19 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: 'simple-1'
       MONGO_INITDB_DATABASE: test
 
+  neo4j:
+    image: neo4j:2025.04-community-bullseye
+    container_name: neo4j
+    volumes:
+      - neo4jData:/data
+    networks:
+      - sTest
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      NEO4J_AUTH: 'neo4j/securepassword112'
+
 networks:
   sTest:
     name: d-net1
@@ -53,3 +66,4 @@ networks:
 volumes:
   mysql8data:
   mongo8data:
+  neo4jData:

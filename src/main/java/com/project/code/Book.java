@@ -1,31 +1,27 @@
 package com.project.code;
+import org.springframework.data.neo4j.core.schema.*;
 
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "books")
+@Node
 public class Book {
-    @Id
-    private String id;
+    @Id @GeneratedValue
+    private Long id;
+
     private String title;
-    private String author;
+
+    @Relationship(type = "WRITTEN_BY", direction = Relationship.Direction.OUTGOING)
+    private Author author;
+
     private double price;
     private String genre;
 
-    public Book(String title, String author, double price, String genre) {
+    public Book(String title, double price, Author author) {
         this.title = title;
         this.author = author;
         this.price = price;
-        this.genre = genre;
+        this.genre = "n/a";
     }
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
+    public Book() {}
 
     public String getTitle() {
         return title;
@@ -34,10 +30,10 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 
