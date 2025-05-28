@@ -1,10 +1,11 @@
 package com.project.code;
+
 import org.springframework.data.neo4j.core.schema.*;
 
 @Node
 public class Book {
     @Id @GeneratedValue
-    private Long id;
+    private Long elementId;
 
     private String title;
 
@@ -12,13 +13,11 @@ public class Book {
     private Author author;
 
     private double price;
-    private String genre;
 
     public Book(String title, double price, Author author) {
         this.title = title;
         this.author = author;
         this.price = price;
-        this.genre = "n/a";
     }
 
     public Book() {}
@@ -42,12 +41,5 @@ public class Book {
     }
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
 }

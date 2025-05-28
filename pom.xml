@@ -28,7 +28,24 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<neo4j-cypher-dsl.version>2024.7.0</neo4j-cypher-dsl.version>
 	</properties>
+
+	<dependencyManagement>
+        <dependencies>
+            <dependency> <!-- try bumping 2024.5.1 -> 2024.7.0 -->
+                <groupId>org.neo4j</groupId>
+                <artifactId>neo4j-cypher-dsl</artifactId>
+                <version>${neo4j-cypher-dsl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.neo4j</groupId>
+                <artifactId>neo4j-cypher-dsl-schema-name-support</artifactId>
+                <version>${neo4j-cypher-dsl.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
